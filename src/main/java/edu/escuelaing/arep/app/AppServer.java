@@ -16,17 +16,21 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AppServer {
-    private HashMap<String, Handler>  listURLHandler;
+public class AppServer extends Thread{
+    private static HashMap<String, Handler>  listURLHandler;
     private static Socket client;
-    private static ServerSocket server;
 
 
-    public AppServer() {
-        listURLHandler = new HashMap<String, Handler>();
+    public AppServer(Socket client) {        
+        this.client = client;
     }
 
-    public void initialize() throws ClassNotFoundException {
+    public void run() {
+    	listen();	
+	}  
+    
+    public static void initialize() throws ClassNotFoundException {
+    	listURLHandler = new HashMap<String, Handler>();
         File f = new File(System.getProperty("user.dir") + "/src/main/java/apps");
         File[] ficheros = f.listFiles();
         for (int x=0;x<ficheros.length;x++){
@@ -34,33 +38,9 @@ public class AppServer {
             load("apps." + name.substring(0,name.indexOf(".")));
             System.out.println("Class " + name.substring(0,name.indexOf(".")) + " was loaded.");
         }
-        listen();
     }
 
     private void listen() {
-        while(true) {
-            server = null;
-            int port;
-            if (System.getenv("PORT") != null) {
-                port = Integer.parseInt(System.getenv("PORT"));
-            } else {
-                port = 4567;
-            }
-            try {
-                server = new ServerSocket(port);
-                System.out.println("Port " + port + " is being listened...");
-            } catch (IOException e) {
-                System.out.println("Port " + port + " could not be listened...");
-                System.exit(1);
-            }
-            client = null;
-            try {
-                System.out.println("Recieving...");
-                client = server.accept();
-            } catch (IOException e) {
-                System.out.println("Accept failed.");
-                System.exit(1);
-            }
             try {
                 PrintWriter out = null;
                 out = new PrintWriter(client.getOutputStream(), true);
@@ -172,14 +152,13 @@ public class AppServer {
                 in.close();
                 out.close();
                 client.close();
-                server.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        
     }
 
-    public void load(String classpath){
+    public static void load(String classpath){
         Class c = null;
         try {
             c = Class.forName(classpath);
