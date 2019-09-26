@@ -13,7 +13,7 @@ public class Controller
 {
     public static void main( String[] args )
     {
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(100);
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1000);
         try {
             AppServer.initialize();
             ServerSocket servidor = new Server().socketServidor();
