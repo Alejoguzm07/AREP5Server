@@ -1,4 +1,4 @@
-spackage edu.escuelaing.arep.app;
+package edu.escuelaing.arep.app;
 
 import edu.escuelaing.arep.app.interfaces.Handler;
 
