@@ -21,7 +21,6 @@ public class Controller
             while(true) {
             	Socket cliente = new Client().socketCliente(servidor);
             	executor.execute(new AppServer(cliente));
-            	cliente.close();
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
