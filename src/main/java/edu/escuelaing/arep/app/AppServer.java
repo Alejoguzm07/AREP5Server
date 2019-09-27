@@ -148,7 +148,7 @@ public class AppServer extends Thread{
                 }
                 in.close();
                 out.close();
-                client.close();
+                //client.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
