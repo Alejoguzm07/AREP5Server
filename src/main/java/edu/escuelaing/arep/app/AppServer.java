@@ -13,24 +13,21 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AppServer extends Thread{
-    private static HashMap<String, Handler>  listURLHandler;
+    private static ConcurrentHashMap<String, Handler>  listURLHandler;
     private static Socket client;
 
 
     public AppServer(Socket client) {        
         this.client = client;
-    }
-
-    public void run() {
-    	listen();	
-	}  
+    } 
     
     public static void initialize() throws ClassNotFoundException {
-    	listURLHandler = new HashMap<String, Handler>();
+    	listURLHandler = new ConcurrentHashMap<String, Handler>();
         File f = new File(System.getProperty("user.dir") + "/src/main/java/apps");
         File[] ficheros = f.listFiles();
         for (int x=0;x<ficheros.length;x++){
@@ -40,7 +37,7 @@ public class AppServer extends Thread{
         }
     }
 
-    private void listen() {
+    public void run() {
             try {
                 PrintWriter out = null;
                 out = new PrintWriter(client.getOutputStream(), true);
